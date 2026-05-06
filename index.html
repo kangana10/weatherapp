@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weather App</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(to bottom, #ffd6e8, #e0f7ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    position: relative;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 300px;
+}
+
+h1 {
+    color: #ff69b4;
+}
+
+input {
+    padding: 10px;
+    width: 80%;
+    border-radius: 10px;
+    border: 2px solid #ffb6c1;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff69b4;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff1493;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Cute touches */
+.container::before {
+    content: "🎀";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.container::after {
+    content: "🐰";
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>Weather App</h1>
+
+    <input type="text" id="locationInput" placeholder="Enter your city...">
+    <br>
+    <button onclick="getWeather()">Check Weather</button>
+
+    <div id="weatherBox" class="hidden">
+        <h2 id="city"></h2>
+        <p id="temp"></p>
+        <p id="condition"></p>
+    </div>
+</div>
+
+<script>
+async function getWeather() {
+    const location = document.getElementById("locationInput").value;
+
+    if (!location) {
+        alert("Enter a location first!");
+        return;
+    }
+
+    const apiKey = "6386b68031b74dab92d162419260605";
+    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+            alert("Location not found!");
+            return;
+        }
+
+        document.getElementById("weatherBox").classList.remove("hidden");
+
+        document.getElementById("city").innerText = data.location.name;
+        document.getElementById("temp").innerText = `🌡️ Temp: ${data.current.temp_c}°C`;
+        document.getElementById("condition").innerText = `☁️ ${data.current.condition.text}`;
+
+    } catch (error) {
+        alert("Something went wrong!");
+        console.error(error);
+    }
+}
+</script>
+
+</body>
+</html>
